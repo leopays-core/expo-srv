@@ -13,6 +13,7 @@
 
 ### Auto
 ```bash
+cd docker
 ./image_build.sh
 ./image_push.sh
 ```
@@ -22,8 +23,8 @@
 
 **Change version**
 ```
-.environment
-Dockerfile
+docker/.environment
+docker/Dockerfile
 package.json
 README.md
 ```
@@ -33,10 +34,12 @@ export ORG=leopays
 export REPO=expo-srv
 export VERSION=v0.1.0
 
+cd docker
+
 docker build --file ./Dockerfile \
   --tag $ORG/$REPO:temp \
   --compress --force-rm --no-cache \
-  .
+  ../
 docker tag $ORG/$REPO:temp $ORG/$REPO:$VERSION
 docker tag $ORG/$REPO:temp $ORG/$REPO:latest
 docker push $ORG/$REPO:$VERSION
@@ -50,6 +53,8 @@ mkdir -p leopays
 cd leopays
 
 git clone https://github.com/leopays-core/expo-srv.git
+cd expo-srv/docker
+
 echo "REPO=https://github.com/leopays-core/expo-app.git" > .env
 echo "BRANCH=development" >> .env
 echo "REACT_NATIVE_PACKAGER_HOSTNAME=54.221.151.106" >> .env
@@ -57,7 +62,6 @@ echo "GIT_PULL_INTERVAL=10" >> .env
 echo "VERBOSE=false" >> .env
 echo "WEB=true" >> .env
 
-cd expo-srv
 docker pull leopays/expo-srv:latest
 docker-compose up -d
 ```
@@ -65,7 +69,7 @@ docker-compose up -d
 
 ### Stop
 ```bash
-cd leopays/expo-srv
+cd leopays/expo-srv/docker
 docker-compose down
 ```
 

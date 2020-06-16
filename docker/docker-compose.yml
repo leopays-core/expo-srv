@@ -2,9 +2,9 @@ version: "3"
 
 services:
   expo-srv:
-    build: 
-      context: ./
-      dockerfile: ./Dockerfile
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
     image: leopays/expo-srv:latest
     deploy:
       restart_policy:
@@ -30,4 +30,4 @@ services:
       #- "19002"
       - "19006"
     volumes:
-      - "./data/app:/app"
+      - "../data/app:/app"

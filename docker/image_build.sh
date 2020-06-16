@@ -6,4 +6,4 @@ set -eo pipefail
 docker build --file ./Dockerfile \
   --tag $ORG/$REPO:temp \
   --compress --force-rm --no-cache \
-  .
+  ../
