@@ -1,6 +1,9 @@
 # Docker image [leopays/expo-srv]
 > Docker org [leopays].
+
 > Docker image [leopays/expo-srv].
+
+> expo-cli version: 3.21.5.
 
 **PORTS:**
   - 19000 - For Expo Client;
