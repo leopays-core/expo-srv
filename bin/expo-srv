@@ -112,6 +112,7 @@ function watch() {
 
 async function runExpo() {
   let options = ['start', '--non-interactive', '--https'];
+  // '--public-url' [url]
   if (web) options.push('--web');
   expo = spawn('expo', options, { cwd: `${dest}` });
 
