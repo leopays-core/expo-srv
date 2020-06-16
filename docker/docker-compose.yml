@@ -30,4 +30,4 @@ services:
       #- "19002"
       - "19006"
     volumes:
-      - "../data/app:/app"
+    #  - "../data/app:/app"
