@@ -2,6 +2,9 @@ version: "3"
 
 services:
   expo-srv:
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
     image: leopays/expo-srv:latest
     deploy:
       restart_policy:
