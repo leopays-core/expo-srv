@@ -16,7 +16,7 @@ services:
     #  USERNAME: "user"
     #  PASSWORD: "pswd"
     #  REACT_NATIVE_PACKAGER_HOSTNAME: "127.0.0.1"
-    #  GIT_PULL_INTERVAL: 5
+    #  GIT_PULL_INTERVAL: 15
     #  VERBOSE: false
     #  WEB: true
     ports:
