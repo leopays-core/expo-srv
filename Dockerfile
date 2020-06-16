@@ -18,8 +18,8 @@ WORKDIR /expo-srv
 COPY ["package.json", "yarn.lock", "./"]
 RUN yarn install --production --silent && mv node_modules ../
 
-COPY ["expo-srv", "./"]
+COPY ["bin/expo-srv", "./bin"]
 
 EXPOSE 19000 19001 19006
 
-CMD ["expo-srv"]
+CMD ["bin/expo-srv"]

@@ -18,9 +18,9 @@
     "url": "https://github.com/leopays-core/expo-srv/issues",
     "email": "dev@leopays.dev"
   },
-  "bin": "./expo-srv",
+  "bin": "./bin/expo-srv",
   "scripts": {
-    "start": "node ./expo-srv"
+    "start": "node ./bin/expo-srv"
   },
   "dependencies": {},
   "devDependencies": {},
