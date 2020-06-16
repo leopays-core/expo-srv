@@ -10,7 +10,7 @@ RUN echo 'APT::Install-Recommends 0;' >> /etc/apt/apt.conf.d/01norecommends && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
   git curl unzip && \
-  yarn global add expo-cli --silent && expo-cli --version
+  yarn global add expo-cli --production --silent && expo-cli --version
 
 
 WORKDIR /expo-srv
@@ -18,7 +18,8 @@ WORKDIR /expo-srv
 COPY ["package.json", "yarn.lock", "./"]
 RUN yarn install --production --silent && mv node_modules ../
 
-COPY ["bin/expo-srv", "./bin/"]
+COPY . .
+RUN rm -R docker && mkdir /app
 
 EXPOSE 19000 19001 19002 19006
 
