@@ -12,42 +12,8 @@
   - 19006 - WEB version.
 
 
-## Build & Push
-
-### Auto
-```bash
-cd docker
-./image_build.sh
-./image_push.sh
-```
-
-
-### Manual
-
-**Change version**
-```
-docker/.environment
-docker/Dockerfile
-package.json
-README.md
-```
-
-```bash
-export ORG=leopays
-export REPO=expo-srv
-export VERSION=v0.1.0
-
-cd docker
-
-docker build --file ./Dockerfile \
-  --tag $ORG/$REPO:temp \
-  --compress --force-rm --no-cache \
-  ../
-docker tag $ORG/$REPO:temp $ORG/$REPO:$VERSION
-docker tag $ORG/$REPO:temp $ORG/$REPO:latest
-docker push $ORG/$REPO:$VERSION
-docker push $ORG/$REPO:latest
-```
+## Build & Puscker Docker image
+See in [docker/README.md](docker).
 
 
 ## First Run
