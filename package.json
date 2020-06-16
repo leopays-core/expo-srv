@@ -1,0 +1,29 @@
+{
+  "name": "expo-srv",
+  "version": "0.1.0",
+  "description": "LeoPays expo server",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "LeoPays",
+    "email": "dev@leopays.dev",
+    "url": "https://leopays.dev/"
+  },
+  "homepage": "https://github.com/leopays-core/expo-srv#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leopays-core/expo-srv.git"
+  },
+  "bugs": {
+    "url": "https://github.com/leopays-core/expo-srv/issues",
+    "email": "dev@leopays.dev"
+  },
+  "bin": "./expo-srv",
+  "scripts": {
+    "start": "node ./expo-srv"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "contributors": [],
+  "keywords": []
+}

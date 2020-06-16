@@ -1,0 +1,145 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const util = require('util');
+const crypto = require('crypto');
+const exec = util.promisify(require('child_process').exec);
+const { spawn } = require('child_process');
+
+
+const dest = '/app';
+const repo = process.env.REPO !== undefined
+  ? process.env.REPO : undefined;
+const branch = process.env.BRANCH !== undefined
+  ? process.env.BRANCH : 'master';
+const username = process.env.USERNAME !== undefined
+  ? process.env.USERNAME : undefined;
+const password = process.env.PASSWORD !== undefined
+  ? process.env.PASSWORD : undefined;
+const verbose = process.env.VERBOSE !== undefined
+  ? process.env.VERBOSE : false;
+const gitPullInterval = process.env.GIT_PULL_INTERVAL !== undefined
+  ? parseInt(process.env.GIT_PULL_INTERVAL, 10) : 5;
+const delay = gitPullInterval * 60 * 1000;
+const web = process.env.WEB !== undefined
+  ? process.env.web : false;
+
+const fnPackage = `${dest}/package.json`;
+const fnApp = `${dest}/app.json`;
+let fhPackage = '';
+let fhApp = '';
+let expo;
+let timerId;
+
+
+main();
+
+
+async function main() {
+  if (!fs.existsSync(`${dest}`))
+    await gitClone();
+  await gitPull();
+  await install();
+  runExpo();
+  getDigests();
+  watch();
+  timerId = setInterval(gitPull, delay);
+}
+
+async function gitClone() {
+  if (repo === undefined)
+    process.exit(1);
+  let cmd = 'cd /';
+  cmd += ` && git clone -b ${branch} `;
+  let auth = '';
+  if (username !== undefined && password !== undefined)
+    auth = `${username}:${password}@`;
+  cmd += repo.replace('//', `//${auth}`);
+  cmd += ` --recursive ${dest}`;
+  if (auth !== '')
+    cmd += ` && git config --global url."https://${auth}github.com/".insteadOf "https://github.com/"`;
+  cmd += ` && cd ${dest}`;
+  cmd += ` && yarn install`;
+  const { stdout, stderr } = await exec(cmd);
+  verbose && console.log('gitClone() stdout:', stdout);
+  verbose && console.error('gitClone() stderr:', stderr);
+  return { stdout, stderr };
+}
+
+async function gitPull() {
+  let { stdout, stderr } = await exec(`cd ${dest} && git pull`);
+  verbose && console.log('gitPull() stdout:', stdout);
+  verbose && console.error('gitPull() stderr:', stderr);
+  return { stdout, stderr };
+}
+async function install() {
+  const { stdout, stderr } = await exec(`cd ${dest} && yarn install`);
+  verbose && console.log('install() stdout:', stdout);
+  verbose && console.error('install() stderr:', stderr);
+  return { stdout, stderr };
+}
+
+function watch() {
+  fs.watchFile(fnPackage, async (curr, prev) => {
+    if (prev.mtime !== curr.mtime) {
+      /*
+      const digest = getHash(fnPackage);
+      if (digest !== fhPackage) {
+        fhPackage = digest;
+        //expo.stdin.end();
+        //expo.kill('SIGHUP');
+        await install();
+        runExpo();
+      }
+      */
+    }
+  });
+
+  fs.watchFile(fnApp, async (curr, prev) => {
+    if (prev.mtime !== curr.mtime) {
+      /*
+      const digest = getHash(fnApp);
+      if (digest !== fhApp) {
+        fhApp = digest;
+        //expo.stdin.end();
+        //expo.kill('SIGHUP');
+        runExpo();
+      }
+      */
+    }
+  });
+}
+
+async function runExpo() {
+  let options = ['start'];
+  if (web) options.push('--web');
+  expo = spawn('expo', options, { cwd: `${dest}` });
+
+  expo.stdout.on('data', (data) => {
+    verbose && console.log('expo stdout:', data.toString());
+  });
+
+  expo.stderr.on('data', (data) => {
+    verbose && console.error('expo stderr:', data.toString());
+  });
+
+  expo.on('close', (code) => {
+    if (code !== 0) {
+      verbose && console.log(`expo process exited with code ${code}`);
+    }
+  });
+  return expo;
+}
+
+
+function getDigests() {
+  fhPackage = getHash(fnPackage);
+  fhApp = getHash(fnApp);
+}
+
+function getHash(fileName) {
+  const hash = crypto.createHash('sha256');
+  const data = fs.readFileSync(fileName, { encoding: 'utf8' });
+  hash.update(data);
+  return hash.digest('hex');
+}
