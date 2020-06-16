@@ -24,9 +24,9 @@ cd leopays
 git clone https://github.com/leopays-core/expo-srv.git
 cd expo-srv/docker
 
-echo "REPO=https://github.com/leopays-core/expo-app.git" > .env
+echo "REPO=https://github.com/leopays-core/leopays-app.git" > .env
 echo "BRANCH=development" >> .env
-echo "REACT_NATIVE_PACKAGER_HOSTNAME=54.221.151.106" >> .env
+echo "REACT_NATIVE_PACKAGER_HOSTNAME=app.leopays.dev" >> .env
 echo "GIT_PULL_INTERVAL=10" >> .env
 echo "VERBOSE=false" >> .env
 echo "WEB=true" >> .env
