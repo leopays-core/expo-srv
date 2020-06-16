@@ -19,6 +19,15 @@
 
 
 ### Manual
+
+**Change version**
+```
+.environment
+Dockerfile
+package.json
+README.md
+```
+
 ```bash
 export ORG=leopays
 export REPO=expo-srv
