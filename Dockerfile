@@ -21,5 +21,6 @@ RUN yarn install --production --silent && mv node_modules ../
 COPY ["bin/expo-srv", "./bin"]
 
 EXPOSE 19000 19001 19006
+VOLUME ["/app"]
 
 CMD ["bin/expo-srv"]
