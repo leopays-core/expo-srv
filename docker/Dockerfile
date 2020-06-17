@@ -20,7 +20,7 @@ COPY ["package.json", "yarn.lock", "./"]
 RUN yarn install --production --silent && mv node_modules ../
 
 COPY . .
-RUN rm -R docker && mkdir /app
+RUN rm -R docker && mkdir -p /data/app
 
 EXPOSE 19000 19001 19002 19006
 
