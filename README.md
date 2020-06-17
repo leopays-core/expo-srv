@@ -18,10 +18,10 @@ See in [docker/README.md](docker).
 
 ## First Run
 ```bash
-mkdir -p leopays
+mkdir -p leopays/data/expo-srv
 cd leopays
 
-cat <<EOF > data/config.json
+cat <<EOF > data/expo-srv/config.json
 {
   "env": "production",
   "data": {
