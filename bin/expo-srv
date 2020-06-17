@@ -13,7 +13,8 @@ const log4js = require('../src/config/logger');
 const logger = log4js.getLogger('expo-srv');
 logger.info('Launching...');
 
-const dest = path.resolve(cfg.get('data.dir'), 'app');;
+const dest = '/app';
+logger.info(dest);
 
 const repo = process.env.REPO !== undefined
   ? process.env.REPO : undefined;
@@ -61,7 +62,7 @@ async function gitClone() {
     process.exit(1);
   }
 
-  let cmd = `cd ${cfg.get('data.dir')}`;
+  let cmd = `cd /`;
   cmd += ` && git clone -b ${branch} `;
   let auth = '';
   if (username !== undefined && password !== undefined)
@@ -72,7 +73,7 @@ async function gitClone() {
     cmd += ` && git config --global url."https://${auth}github.com/".insteadOf "https://github.com/"`;
   cmd += ` && cd ${dest}`;
   cmd += ` && yarn install`;
-  logger.trace(`cmd: '${cmd}'`);
+  console.log(`cmd: '${cmd}'`);
   const { stdout, stderr } = await exec(cmd);
   verbose && console.log('gitClone() stdout:', stdout);
   verbose && console.error('gitClone() stderr:', stderr);
@@ -81,14 +82,14 @@ async function gitClone() {
 
 async function gitPull() {
   let { stdout, stderr } = await exec(`cd ${dest} && git pull`);
-  verbose && console.log('gitPull() stdout:', stdout);
-  verbose && console.error('gitPull() stderr:', stderr);
+  console.log('gitPull() stdout:', stdout);
+  console.error('gitPull() stderr:', stderr);
   return { stdout, stderr };
 }
 async function install() {
   const { stdout, stderr } = await exec(`cd ${dest} && yarn install`);
-  verbose && console.log('install() stdout:', stdout);
-  verbose && console.error('install() stderr:', stderr);
+  console.log('install() stdout:', stdout);
+  console.error('install() stderr:', stderr);
   return { stdout, stderr };
 }
 
@@ -135,6 +136,7 @@ async function runExpo() {
     options.push('--web');
 
   // '--public-url' [url]
+  console.error(options);
   expo = spawn('expo', options, {
     cwd: `${dest}`, env: Object.assign({}, process.env, env),
   });
