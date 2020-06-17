@@ -138,7 +138,7 @@ async function runExpo() {
   // '--public-url' [url]
   console.error(options);
   expo = spawn('expo', options, {
-    cwd: `${dest}`, //, env: Object.assign({}, process.env, env)
+    cwd: `${dest}`, env: Object.assign({}, process.env, env),
   });
 
   expo.stdout.on('data', (data) => {
