@@ -22,7 +22,11 @@
   "scripts": {
     "start": "node ./bin/expo-srv"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@log4js-node/gelf": "^1.0.2",
+    "convict": "^6.0.0",
+    "log4js": "^6.3.0"
+  },
   "devDependencies": {},
   "contributors": [],
   "keywords": []

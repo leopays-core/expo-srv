@@ -1,13 +1,20 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const path = require('path');
 const util = require('util');
 const crypto = require('crypto');
 const exec = util.promisify(require('child_process').exec);
 const { spawn } = require('child_process');
+const cfg = require('../src/config/cfg');
+const log4js = require('../src/config/logger');
 
 
-const dest = '/app';
+const logger = log4js.getLogger('expo-srv');
+logger.info('Launching...');
+
+const dest = path.resolve(cfg.get('data.dir'), '/app');;
+
 const repo = process.env.REPO !== undefined
   ? process.env.REPO : undefined;
 const branch = process.env.BRANCH !== undefined
@@ -19,7 +26,7 @@ const password = process.env.PASSWORD !== undefined
 const verbose = process.env.VERBOSE !== undefined
   ? process.env.VERBOSE : false;
 const gitPullInterval = process.env.GIT_PULL_INTERVAL !== undefined
-  ? parseInt(process.env.GIT_PULL_INTERVAL, 10) : 5;
+  ? parseInt(process.env.GIT_PULL_INTERVAL, 10) : 30;
 const delay = gitPullInterval * 60 * 1000;
 const web = process.env.WEB !== undefined
   ? process.env.web : false;
@@ -33,6 +40,7 @@ let timerId;
 
 
 main();
+logger.info('Launched');
 
 
 async function main() {
@@ -47,9 +55,13 @@ async function main() {
 }
 
 async function gitClone() {
-  if (repo === undefined)
+  if (repo === undefined) {
+    console.log('repo dir === undefined');
+    logger.error('repo dir === undefined');
     process.exit(1);
-  let cmd = 'cd /';
+  }
+
+  let cmd = `cd ${cfg.get('data.dir')}`;
   cmd += ` && git clone -b ${branch} `;
   let auth = '';
   if (username !== undefined && password !== undefined)
@@ -60,6 +72,7 @@ async function gitClone() {
     cmd += ` && git config --global url."https://${auth}github.com/".insteadOf "https://github.com/"`;
   cmd += ` && cd ${dest}`;
   cmd += ` && yarn install`;
+  logger.trace(`cmd: '${cmd}'`);
   const { stdout, stderr } = await exec(cmd);
   verbose && console.log('gitClone() stdout:', stdout);
   verbose && console.error('gitClone() stderr:', stderr);
@@ -111,10 +124,20 @@ function watch() {
 }
 
 async function runExpo() {
-  let options = ['start', '--https', '--non-interactive'];
+  let options = ['start', '--non-interactive'];
+  let env = {};
+  if (cfg.get('https') && cfg.get('ssl.crt.file') && cfg.get('ssl.key.file')) {
+    options.push('--https');
+    env.SSL_CRT_FILE = cfg.get('ssl.crt.file');
+    env.SSL_KEY_FILE = cfg.get('ssl.key.file');
+  }
+  if (cfg.get('web'))
+    options.push('--web');
+
   // '--public-url' [url]
-  if (web) options.push('--web');
-  expo = spawn('expo', options, { cwd: `${dest}` });
+  expo = spawn('expo', options, {
+    cwd: `${dest}`, env: Object.assign({}, process.env, env),
+  });
 
   expo.stdout.on('data', (data) => {
     verbose && console.log('expo stdout:', data.toString());

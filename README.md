@@ -21,15 +21,24 @@ See in [docker/README.md](docker).
 mkdir -p leopays
 cd leopays
 
-git clone https://github.com/leopays-core/expo-srv.git
+git clone https://github.com/leopays-core/expo-srv.git ./expo-srv
 cd expo-srv/docker
 
-echo "REPO=https://github.com/leopays-core/leopays-app.git" > .env
-echo "BRANCH=development" >> .env
-echo "REACT_NATIVE_PACKAGER_HOSTNAME=app.leopays.dev" >> .env
-echo "GIT_PULL_INTERVAL=15" >> .env
-echo "VERBOSE=false" >> .env
-echo "WEB=true" >> .env
+cat <<EOF > .env
+NODE_ENV=production
+DATA_DIR=/data
+REPO=https://github.com/org/expo-app.git
+BRANCH=master
+USERNAME=user
+PASSWORD=pswd
+REACT_NATIVE_PACKAGER_HOSTNAME=127.0.0.1
+GIT_PULL_INTERVAL=30
+VERBOSE=false
+WEB=true
+HTTPS=true
+SSL_CRT_FILE=cert.pem
+SSL_KEY_FILE=privkey.pem
+EOF
 
 docker pull leopays/expo-srv:latest
 docker-compose up -d
