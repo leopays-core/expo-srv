@@ -21,6 +21,40 @@ See in [docker/README.md](docker).
 mkdir -p leopays
 cd leopays
 
+cat <<EOF > data/config.json
+{
+  "env": "production",
+  "data": {
+    "dir": "/data"
+  },
+  "web": true,
+  "https": true,
+  "ssl": {
+    "crt": {
+      "file": "cert.pem"
+    },
+    "key": {
+      "file": "privkey.pem"
+    }
+  },
+  "config": {
+    "file": "config.json",
+    "print": false,
+    "save": false
+  },
+  "logger": {
+    "level": "info",
+    "appenders": {
+      "stdout": true,
+      "file": true
+    },
+    "file": {
+      "name": "debug.log"
+    }
+  }
+}
+EOF
+
 git clone https://github.com/leopays-core/expo-srv.git ./expo-srv
 cd expo-srv/docker
 
