@@ -20,10 +20,8 @@ services:
     #  REACT_NATIVE_PACKAGER_HOSTNAME: "127.0.0.1"
     #  GIT_PULL_INTERVAL: 30
     #  VERBOSE: false
-    #  WEB: true
-    #  HTTPS: true
-    #  SSL_CRT_FILE: "cert.pem"
-    #  SSL_KEY_FILE: "privkey.pem"
+    #  WEB: false
+    #  HTTPS: false
     ports:
       - "19000:19000"
       - "19001:19001"

@@ -27,16 +27,8 @@ cat <<EOF > data/expo-srv/config.json
   "data": {
     "dir": "/data"
   },
-  "web": true,
-  "https": true,
-  "ssl": {
-    "crt": {
-      "file": "cert.pem"
-    },
-    "key": {
-      "file": "privkey.pem"
-    }
-  },
+  "web": false,
+  "https": false,
   "config": {
     "file": "config.json",
     "print": false,
@@ -68,10 +60,8 @@ PASSWORD=pswd
 REACT_NATIVE_PACKAGER_HOSTNAME=127.0.0.1
 GIT_PULL_INTERVAL=30
 VERBOSE=false
-WEB=true
-HTTPS=true
-SSL_CRT_FILE=cert.pem
-SSL_KEY_FILE=privkey.pem
+WEB=false
+HTTPS=false
 EOF
 
 docker pull leopays/expo-srv:latest
